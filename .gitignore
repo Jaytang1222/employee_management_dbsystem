@@ -1,0 +1,255 @@
+# ===========================
+# Java & Maven
+# ===========================
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ===========================
+# IDE - IntelliJ IDEA
+# ===========================
+
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# IntelliJ IDEA specific
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/gradle.xml
+.idea/libraries
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+
+# ===========================
+# IDE - Eclipse
+# ===========================
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+.c9/
+*.launch
+.buildpath
+.target
+.tern-project
+.texlipse
+.springBeans
+.factorypath
+
+# ===========================
+# IDE - VS Code
+# ===========================
+
+.vscode/
+*.code-workspace
+.history/
+
+# ===========================
+# Operating System
+# ===========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===========================
+# Spring Boot
+# ===========================
+
+# Spring Boot DevTools
+.spring-boot-devtools.properties
+
+# Application logs
+application*.log
+spring.log
+
+# ===========================
+# Database
+# ===========================
+
+# H2 Database
+*.db
+*.trace.db
+
+# ===========================
+# Build & Deployment
+# ===========================
+
+# Build output
+build/
+dist/
+*.class
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# ===========================
+# Security & Sensitive Data
+# ===========================
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Sensitive configuration (uncomment if needed)
+# application-prod.yml
+# application-prod.properties
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# ===========================
+# Testing
+# ===========================
+
+# Test coverage
+coverage/
+*.coverage
+.nyc_output/
+
+# JUnit
+TEST-*.xml
+
+# ===========================
+# Documentation
+# ===========================
+
+# Generated documentation
+docs/_build/
+site/
+
+# ===========================
+# Temporary Files
+# ===========================
+
+*.tmp
+*.temp
+*.cache
+*.pid
+*.seed
+*.pid.lock
+
+# ===========================
+# Node.js (if frontend included)
+# ===========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ===========================
+# Project Specific
+# ===========================
+
+# Metals (Scala)
+.metals/
+.bloop/
+metals.sbt
+
+# Local JDBC drivers (keep in version control if needed)
+# Uncomment the line below if you want to ignore local jar files
+# jar/*.jar
+
+# Backup files
+*.backup
+*.old
+
+# ===========================
+# Miscellaneous
+# ===========================
+
+# Thumbnails
+*.thumb
+
+# Files that might appear in the root
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk

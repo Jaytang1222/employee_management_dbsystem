@@ -1,0 +1,86 @@
+# 服务器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+# Spring配置
+spring:
+  application:
+    name: employee-management-system
+
+  # 数据源配置 (OpenGauss)
+  datasource:
+    driver-class-name: org.opengauss.Driver
+    url: jdbc:opengauss://121.36.103.164:26000/employee_management_system
+    username: jaytang
+    password: hannah1222K!
+    
+    # 连接池配置
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: EmsHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+# MyBatis配置
+mybatis:
+  # Mapper XML文件位置
+  mapper-locations: classpath:mapper/*.xml
+  # 实体类包路径
+  type-aliases-package: com.company.ems.entity
+  configuration:
+    # 开启驼峰命名转换
+    map-underscore-to-camel-case: true
+    # 开启延迟加载
+    lazy-loading-enabled: true
+    # 开启二级缓存
+    cache-enabled: true
+    # 日志实现
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.company.ems: DEBUG
+    com.company.ems.mapper: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
+  file:
+    name: logs/ems.log
+    max-size: 10MB
+    max-history: 30
+
+# JWT配置
+jwt:
+  # JWT密钥 (请修改为你自己的密钥，建议使用32位以上随机字符串)
+  secret: hannah1222_EMS_JWT_Secret_Key_2024_!@#$%^&*()
+  # Token有效期（单位：毫秒，默认24小时）
+  expiration: 86400000
+  # Token请求头名称
+  header: Authorization
+  # Token前缀
+  prefix: Bearer 
+
+# 分页配置
+pagehelper:
+  helper-dialect: postgresql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
