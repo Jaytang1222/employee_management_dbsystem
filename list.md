@@ -14,15 +14,15 @@
 ### **后端技术栈**
 | 技术 | 版本 | 用途 |
 |------|------|------|
-| Java | 8 | 编程语言 |
+| Java | 8 | 编程语言（LTS长期支持版本） |
 | Spring Boot | 2.7.18 | 应用框架 |
-| MyBatis | 2.3.1 | 持久层框架 |
-| OpenGauss JDBC | 3.1.0 | 数据库驱动 |
-| Lombok | Latest | 简化实体类代码 |
-| Validation | Spring Boot Starter | 数据校验 |
-| JWT (jjwt) | 0.9.1 | 登录认证 |
-| Apache POI | 5.2.3 | Excel导出 |
-| Maven | 3.6+ | 构建工具 |
+| MyBatis Spring Boot Starter | 2.3.2 | 持久层框架 |
+| OpenGauss JDBC | 6.0.3 | 数据库驱动（兼容Spring Boot 2.x） |
+| Lombok | 1.18.30 | 简化实体类代码 |
+| Validation (javax) | Spring Boot Starter | 数据校验 |
+| JWT (jjwt-api) | 0.11.5 | 登录认证（支持Java 8） |
+| Apache POI | 5.2.5 | Excel导出 |
+| Maven | 3.8+ | 构建工具 |
 
 ### **前端技术栈**
 | 技术 | 版本 | 用途 |
@@ -607,9 +607,11 @@ docs: 更新数据库设计文档
 ### **官方文档**
 - [Spring Boot 2.7.x 文档](https://docs.spring.io/spring-boot/docs/2.7.x/reference/html/)
 - [MyBatis 文档](https://mybatis.org/mybatis-3/zh/index.html)
+- [MyBatis Spring Boot Starter 文档](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
 - [Vue 3 文档](https://cn.vuejs.org/)
 - [Element Plus 文档](https://element-plus.org/zh-CN/)
 - [OpenGauss 文档](https://docs.opengauss.org/)
+- [Java 8 文档](https://docs.oracle.com/javase/8/docs/api/)
 
 ### **技术社区**
 - Stack Overflow
@@ -619,9 +621,10 @@ docs: 更新数据库设计文档
 
 ---
 
-**文档版本**：v1.0  
-**最后更新**：2024-01-19  
-**维护人员**：开发团队
+**文档版本**：v2.1  
+**最后更新**：2026-04-21  
+**维护人员**：开发团队  
+**技术栈更新说明**：使用 Java 8 + Spring Boot 2.7.18 以确保更广泛的兼容性和稳定性
 
 ---
 
