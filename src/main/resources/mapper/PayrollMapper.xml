@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.PayrollMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="PayrollVOMap" type="com.company.ems.vo.PayrollVO">
+        <id property="payrollId" column="payroll_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="payMonth" column="pay_month"/>
+        <result property="basePay" column="base_pay"/>
+        <result property="allowance" column="allowance"/>
+        <result property="bonus" column="bonus"/>
+        <result property="deduction" column="deduction"/>
+        <result property="socialInsurance" column="social_insurance"/>
+        <result property="tax" column="tax"/>
+        <result property="netPay" column="net_pay"/>
+        <result property="payDate" column="pay_date"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 新增薪资记录 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Payroll" 
+            useGeneratedKeys="true" keyProperty="payrollId">
+        INSERT INTO payroll_info (
+            employee_id, pay_month, base_pay, allowance, bonus,
+            deduction, social_insurance, tax, net_pay, pay_date, created_at
+        ) VALUES (
+            #{employeeId}, #{payMonth}, #{basePay}, #{allowance}, #{bonus},
+            #{deduction}, #{socialInsurance}, #{tax}, #{netPay}, #{payDate}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 根据ID更新薪资记录 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Payroll">
+        UPDATE payroll_info
+        SET employee_id = #{employeeId},
+            pay_month = #{payMonth},
+            base_pay = #{basePay},
+            allowance = #{allowance},
+            bonus = #{bonus},
+            deduction = #{deduction},
+            social_insurance = #{socialInsurance},
+            tax = #{tax},
+            net_pay = #{netPay},
+            pay_date = #{payDate}
+        WHERE payroll_id = #{payrollId}
+    </update>
+
+    <!-- 根据ID删除薪资记录 -->
+    <delete id="deleteById">
+        DELETE FROM payroll_info
+        WHERE payroll_id = #{payrollId}
+    </delete>
+
+    <!-- 根据ID查询薪资记录 -->
+    <select id="findById" resultType="com.company.ems.entity.Payroll">
+        SELECT 
+            payroll_id, employee_id, pay_month, base_pay, allowance, bonus,
+            deduction, social_insurance, tax, net_pay, pay_date, created_at
+        FROM payroll_info
+        WHERE payroll_id = #{payrollId}
+    </select>
+
+    <!-- 根据ID查询薪资详情（包含员工信息） -->
+    <select id="findDetailById" resultMap="PayrollVOMap">
+        SELECT 
+            p.payroll_id,
+            p.employee_id,
+            e.name AS employee_name,
+            p.pay_month,
+            p.base_pay,
+            p.allowance,
+            p.bonus,
+            p.deduction,
+            p.social_insurance,
+            p.tax,
+            p.net_pay,
+            p.pay_date,
+            p.created_at
+        FROM payroll_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        WHERE p.payroll_id = #{payrollId}
+    </select>
+
+    <!-- 查询薪资列表（带分页和条件查询） -->
+    <select id="findList" resultMap="PayrollVOMap">
+        SELECT 
+            p.payroll_id,
+            p.employee_id,
+            e.name AS employee_name,
+            p.pay_month,
+            p.base_pay,
+            p.allowance,
+            p.bonus,
+            p.deduction,
+            p.social_insurance,
+            p.tax,
+            p.net_pay,
+            p.pay_date,
+            p.created_at
+        FROM payroll_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND p.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="payMonth != null and payMonth != ''">
+                AND p.pay_month = #{payMonth}
+            </if>
+            <if test="startMonth != null and startMonth != ''">
+                AND p.pay_month &gt;= #{startMonth}
+            </if>
+            <if test="endMonth != null and endMonth != ''">
+                AND p.pay_month &lt;= #{endMonth}
+            </if>
+        </where>
+        ORDER BY p.pay_month DESC, p.created_at DESC
+        LIMIT #{pageSize} OFFSET #{pageNum}
+    </select>
+
+    <!-- 统计薪资总数（带条件） -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(*)
+        FROM payroll_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND p.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="payMonth != null and payMonth != ''">
+                AND p.pay_month = #{payMonth}
+            </if>
+            <if test="startMonth != null and startMonth != ''">
+                AND p.pay_month &gt;= #{startMonth}
+            </if>
+            <if test="endMonth != null and endMonth != ''">
+                AND p.pay_month &lt;= #{endMonth}
+            </if>
+        </where>
+    </select>
+
+    <!-- 检查员工在指定月份是否已有薪资记录 -->
+    <select id="findByEmployeeAndMonth" resultType="com.company.ems.entity.Payroll">
+        SELECT 
+            payroll_id, employee_id, pay_month, base_pay, allowance, bonus,
+            deduction, social_insurance, tax, net_pay, pay_date, created_at
+        FROM payroll_info
+        WHERE employee_id = #{employeeId}
+          AND pay_month = #{payMonth}
+    </select>
+
+</mapper>

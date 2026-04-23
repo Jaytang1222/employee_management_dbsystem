@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.AttendanceMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="AttendanceVOMap" type="com.company.ems.vo.AttendanceVO">
+        <id property="attendanceId" column="attendance_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="attendanceDate" column="attendance_date"/>
+        <result property="checkInTime" column="check_in_time"/>
+        <result property="checkOutTime" column="check_out_time"/>
+        <result property="attendanceStatus" column="attendance_status"/>
+        <result property="lateMin" column="late_min"/>
+        <result property="earlyLeaveMin" column="early_leave_min"/>
+        <result property="overtimeHours" column="overtime_hours"/>
+        <result property="remark" column="remark"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 新增考勤记录 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Attendance" 
+            useGeneratedKeys="true" keyProperty="attendanceId">
+        INSERT INTO attendance_info (
+            employee_id, attendance_date, check_in_time, check_out_time,
+            attendance_status, late_min, early_leave_min, overtime_hours,
+            remark, created_at
+        ) VALUES (
+            #{employeeId}, #{attendanceDate}, #{checkInTime}, #{checkOutTime},
+            #{attendanceStatus}, #{lateMin}, #{earlyLeaveMin}, #{overtimeHours},
+            #{remark}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 根据ID更新考勤记录 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Attendance">
+        UPDATE attendance_info
+        SET employee_id = #{employeeId},
+            attendance_date = #{attendanceDate},
+            check_in_time = #{checkInTime},
+            check_out_time = #{checkOutTime},
+            attendance_status = #{attendanceStatus},
+            late_min = #{lateMin},
+            early_leave_min = #{earlyLeaveMin},
+            overtime_hours = #{overtimeHours},
+            remark = #{remark}
+        WHERE attendance_id = #{attendanceId}
+    </update>
+
+    <!-- 根据ID删除考勤记录 -->
+    <delete id="deleteById">
+        DELETE FROM attendance_info
+        WHERE attendance_id = #{attendanceId}
+    </delete>
+
+    <!-- 根据ID查询考勤记录 -->
+    <select id="findById" resultType="com.company.ems.entity.Attendance">
+        SELECT 
+            attendance_id, employee_id, attendance_date, check_in_time, check_out_time,
+            attendance_status, late_min, early_leave_min, overtime_hours,
+            remark, created_at
+        FROM attendance_info
+        WHERE attendance_id = #{attendanceId}
+    </select>
+
+    <!-- 根据ID查询考勤详情（包含员工信息） -->
+    <select id="findDetailById" resultMap="AttendanceVOMap">
+        SELECT 
+            a.attendance_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.attendance_date,
+            a.check_in_time,
+            a.check_out_time,
+            a.attendance_status,
+            a.late_min,
+            a.early_leave_min,
+            a.overtime_hours,
+            a.remark,
+            a.created_at
+        FROM attendance_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        WHERE a.attendance_id = #{attendanceId}
+    </select>
+
+    <!-- 查询考勤列表（带分页和条件查询） -->
+    <select id="findList" resultMap="AttendanceVOMap">
+        SELECT 
+            a.attendance_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.attendance_date,
+            a.check_in_time,
+            a.check_out_time,
+            a.attendance_status,
+            a.late_min,
+            a.early_leave_min,
+            a.overtime_hours,
+            a.remark,
+            a.created_at
+        FROM attendance_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND a.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="attendanceStatus != null and attendanceStatus != ''">
+                AND a.attendance_status = #{attendanceStatus}
+            </if>
+            <if test="startDate != null">
+                AND a.attendance_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND a.attendance_date &lt;= #{endDate}
+            </if>
+        </where>
+        ORDER BY a.attendance_date DESC, a.created_at DESC
+        LIMIT #{pageSize} OFFSET #{pageNum}
+    </select>
+
+    <!-- 统计考勤总数（带条件） -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(*)
+        FROM attendance_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND a.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="attendanceStatus != null and attendanceStatus != ''">
+                AND a.attendance_status = #{attendanceStatus}
+            </if>
+            <if test="startDate != null">
+                AND a.attendance_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND a.attendance_date &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <!-- 检查员工在指定日期是否已有考勤记录 -->
+    <select id="findByEmployeeAndDate" resultType="com.company.ems.entity.Attendance">
+        SELECT 
+            attendance_id, employee_id, attendance_date, check_in_time, check_out_time,
+            attendance_status, late_min, early_leave_min, overtime_hours,
+            remark, created_at
+        FROM attendance_info
+        WHERE employee_id = #{employeeId}
+          AND attendance_date = #{attendanceDate}
+    </select>
+
+    <!-- 查询员工月度考勤报表 -->
+    <select id="getMonthlyReport" resultType="com.company.ems.vo.AttendanceReportVO">
+        SELECT 
+            a.employee_id,
+            e.name AS employee_name,
+            #{month} AS report_month,
+            COUNT(*) AS attendance_days,
+            SUM(CASE WHEN a.attendance_status = 'normal' THEN 1 ELSE 0 END) AS normal_days,
+            SUM(CASE WHEN a.attendance_status = 'late' THEN 1 ELSE 0 END) AS late_count,
+            SUM(a.late_min) AS total_late_min,
+            SUM(CASE WHEN a.attendance_status = 'early_leave' THEN 1 ELSE 0 END) AS early_leave_count,
+            SUM(a.early_leave_min) AS total_early_leave_min,
+            SUM(CASE WHEN a.attendance_status = 'absent' THEN 1 ELSE 0 END) AS absent_days,
+            SUM(CASE WHEN a.attendance_status = 'leave' THEN 1 ELSE 0 END) AS leave_days,
+            SUM(a.overtime_hours) AS total_overtime_hours
+        FROM attendance_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        WHERE a.employee_id = #{employeeId}
+          AND TO_CHAR(a.attendance_date, 'YYYY-MM') = #{month}
+        GROUP BY a.employee_id, e.name
+    </select>
+
+</mapper>

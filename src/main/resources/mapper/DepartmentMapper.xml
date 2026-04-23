@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.DepartmentMapper">
+    
+    <!-- 部门结果映射 -->
+    <resultMap id="DepartmentResultMap" type="com.company.ems.entity.Department">
+        <id property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="parentDeptId" column="parent_dept_id"/>
+        <result property="managerEmployeeId" column="manager_employee_id"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+    
+    <!-- 部门VO结果映射 -->
+    <resultMap id="DepartmentVOResultMap" type="com.company.ems.vo.DepartmentVO">
+        <id property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="parentDeptId" column="parent_dept_id"/>
+        <result property="parentDeptName" column="parent_dept_name"/>
+        <result property="managerEmployeeId" column="manager_employee_id"/>
+        <result property="managerName" column="manager_name"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+    
+    <!-- 部门树形VO结果映射 -->
+    <resultMap id="DepartmentTreeVOResultMap" type="com.company.ems.vo.DepartmentTreeVO">
+        <id property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="parentDeptId" column="parent_dept_id"/>
+        <result property="managerEmployeeId" column="manager_employee_id"/>
+        <result property="managerName" column="manager_name"/>
+        <result property="status" column="status"/>
+    </resultMap>
+    
+    <!-- 新增部门 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Department" useGeneratedKeys="true" keyProperty="deptId">
+        INSERT INTO department_info (
+            dept_name, parent_dept_id, manager_employee_id, status, 
+            created_at, updated_at
+        ) VALUES (
+            #{deptName}, #{parentDeptId}, #{managerEmployeeId}, #{status},
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+    </insert>
+    
+    <!-- 更新部门 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Department">
+        UPDATE department_info
+        <set>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="parentDeptId != null">parent_dept_id = #{parentDeptId},</if>
+            <if test="managerEmployeeId != null">manager_employee_id = #{managerEmployeeId},</if>
+            <if test="status != null">status = #{status},</if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE dept_id = #{deptId}
+    </update>
+    
+    <!-- 删除部门（软删除） -->
+    <update id="deleteById">
+        UPDATE department_info
+        SET status = 'deleted', updated_at = CURRENT_TIMESTAMP
+        WHERE dept_id = #{deptId}
+    </update>
+    
+    <!-- 根据ID查询部门 -->
+    <select id="findById" resultMap="DepartmentResultMap">
+        SELECT dept_id, dept_name, parent_dept_id, manager_employee_id, 
+               status, created_at, updated_at
+        FROM department_info
+        WHERE dept_id = #{deptId}
+          AND status != 'deleted'
+    </select>
+    
+    <!-- 查询部门列表 -->
+    <select id="findList" resultMap="DepartmentVOResultMap">
+        SELECT 
+            d.dept_id, d.dept_name, d.parent_dept_id, d.manager_employee_id, 
+            d.status, d.created_at, d.updated_at,
+            pd.dept_name AS parent_dept_name,
+            e.name AS manager_name
+        FROM department_info d
+        LEFT JOIN department_info pd ON d.parent_dept_id = pd.dept_id
+        LEFT JOIN employee_info e ON d.manager_employee_id = e.employee_id
+        WHERE d.status != 'deleted'
+        ORDER BY d.dept_id ASC
+    </select>
+    
+    <!-- 根据ID查询部门详情 -->
+    <select id="findDetailById" resultMap="DepartmentVOResultMap">
+        SELECT 
+            d.dept_id, d.dept_name, d.parent_dept_id, d.manager_employee_id, 
+            d.status, d.created_at, d.updated_at,
+            pd.dept_name AS parent_dept_name,
+            e.name AS manager_name
+        FROM department_info d
+        LEFT JOIN department_info pd ON d.parent_dept_id = pd.dept_id
+        LEFT JOIN employee_info e ON d.manager_employee_id = e.employee_id
+        WHERE d.dept_id = #{deptId}
+          AND d.status != 'deleted'
+    </select>
+    
+    <!-- 查询所有部门（用于构建树形结构） -->
+    <select id="findAllForTree" resultMap="DepartmentTreeVOResultMap">
+        SELECT 
+            d.dept_id, d.dept_name, d.parent_dept_id, d.manager_employee_id, 
+            d.status,
+            e.name AS manager_name
+        FROM department_info d
+        LEFT JOIN employee_info e ON d.manager_employee_id = e.employee_id
+        WHERE d.status != 'deleted'
+        ORDER BY d.dept_id ASC
+    </select>
+    
+    <!-- 根据上级部门ID查询子部门数量 -->
+    <select id="countByParentId" resultType="int">
+        SELECT COUNT(*)
+        FROM department_info
+        WHERE parent_dept_id = #{parentDeptId}
+          AND status != 'deleted'
+    </select>
+    
+    <!-- 根据部门ID查询员工数量 -->
+    <select id="countEmployeesByDeptId" resultType="int">
+        SELECT COUNT(DISTINCT a.employee_id)
+        FROM assignment_info a
+        WHERE a.dept_id = #{deptId}
+          AND a.status = 'active'
+    </select>
+    
+    <!-- 按部门统计员工数量 -->
+    <select id="countEmployeeByDepartment" resultType="com.company.ems.vo.EmployeeCountByDeptVO">
+        SELECT 
+            d.dept_id AS deptId,
+            d.dept_name AS deptName,
+            d.parent_dept_id AS parentDeptId,
+            pd.dept_name AS parentDeptName,
+            COALESCE(emp_count.employee_count, 0) AS employeeCount,
+            e.name AS managerName
+        FROM department_info d
+        LEFT JOIN department_info pd ON d.parent_dept_id = pd.dept_id
+        LEFT JOIN employee_info e ON d.manager_employee_id = e.employee_id
+        LEFT JOIN (
+            SELECT 
+                a.dept_id,
+                COUNT(DISTINCT a.employee_id) AS employee_count
+            FROM assignment_info a
+            INNER JOIN employee_info emp ON a.employee_id = emp.employee_id
+            WHERE a.is_primary = true
+              AND a.status = 'active'
+              AND emp.status = 'active'
+            GROUP BY a.dept_id
+        ) emp_count ON d.dept_id = emp_count.dept_id
+        WHERE d.status != 'deleted'
+        ORDER BY d.dept_id ASC
+    </select>
+    
+</mapper>

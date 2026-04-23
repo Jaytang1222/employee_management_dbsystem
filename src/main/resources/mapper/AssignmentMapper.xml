@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.AssignmentMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="AssignmentVOMap" type="com.company.ems.vo.AssignmentVO">
+        <id property="assignmentId" column="assignment_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="positionId" column="position_id"/>
+        <result property="positionName" column="position_name"/>
+        <result property="startDate" column="start_date"/>
+        <result property="isPrimary" column="is_primary"/>
+        <result property="changeReason" column="change_reason"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 新增员工分配 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Assignment" 
+            useGeneratedKeys="true" keyProperty="assignmentId">
+        INSERT INTO assignment_info (
+            employee_id, dept_id, position_id, start_date, 
+            is_primary, change_reason, status, created_at
+        ) VALUES (
+            #{employeeId}, #{deptId}, #{positionId}, #{startDate},
+            #{isPrimary}, #{changeReason}, #{status}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 根据ID查询分配信息 -->
+    <select id="findById" resultMap="AssignmentVOMap">
+        SELECT 
+            a.assignment_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.dept_id,
+            d.dept_name,
+            a.position_id,
+            p.position_name,
+            a.start_date,
+            a.is_primary,
+            a.change_reason,
+            a.status,
+            a.created_at
+        FROM assignment_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        WHERE a.assignment_id = #{assignmentId}
+    </select>
+
+    <!-- 查询员工当前有效的分配记录 -->
+    <select id="findActiveByEmployeeId" resultMap="AssignmentVOMap">
+        SELECT 
+            a.assignment_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.dept_id,
+            d.dept_name,
+            a.position_id,
+            p.position_name,
+            a.start_date,
+            a.is_primary,
+            a.change_reason,
+            a.status,
+            a.created_at
+        FROM assignment_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        WHERE a.employee_id = #{employeeId}
+          AND a.status = 'active'
+        ORDER BY a.is_primary DESC, a.created_at DESC
+    </select>
+
+    <!-- 查询员工的主部门分配 -->
+    <select id="findPrimaryByEmployeeId" resultMap="AssignmentVOMap">
+        SELECT 
+            a.assignment_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.dept_id,
+            d.dept_name,
+            a.position_id,
+            p.position_name,
+            a.start_date,
+            a.is_primary,
+            a.change_reason,
+            a.status,
+            a.created_at
+        FROM assignment_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        WHERE a.employee_id = #{employeeId}
+          AND a.status = 'active'
+          AND a.is_primary = true
+        LIMIT 1
+    </select>
+
+    <!-- 查询员工的历史分配记录 -->
+    <select id="findHistoryByEmployeeId" resultMap="AssignmentVOMap">
+        SELECT 
+            a.assignment_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.dept_id,
+            d.dept_name,
+            a.position_id,
+            p.position_name,
+            a.start_date,
+            a.is_primary,
+            a.change_reason,
+            a.status,
+            a.created_at
+        FROM assignment_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        WHERE a.employee_id = #{employeeId}
+        ORDER BY a.created_at DESC
+    </select>
+
+    <!-- 更新分配状态 -->
+    <update id="updateStatus">
+        UPDATE assignment_info
+        SET status = #{status}
+        WHERE assignment_id = #{assignmentId}
+    </update>
+
+    <!-- 将员工的所有主部门设置为非主部门 -->
+    <update id="updatePrimaryToFalse">
+        UPDATE assignment_info
+        SET is_primary = false
+        WHERE employee_id = #{employeeId}
+          AND status = 'active'
+          AND is_primary = true
+    </update>
+
+    <!-- 将员工的旧分配记录设置为inactive -->
+    <update id="inactivateOldAssignments">
+        UPDATE assignment_info
+        SET status = 'inactive'
+        WHERE employee_id = #{employeeId}
+          AND status = 'active'
+    </update>
+
+    <!-- 统计员工在某部门的分配数量 -->
+    <select id="countByEmployeeAndDept" resultType="int">
+        SELECT COUNT(*)
+        FROM assignment_info
+        WHERE employee_id = #{employeeId}
+          AND dept_id = #{deptId}
+          AND status = 'active'
+    </select>
+
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.PositionMapper">
+    
+    <!-- 岗位结果映射 -->
+    <resultMap id="PositionResultMap" type="com.company.ems.entity.Position">
+        <id property="positionId" column="position_id"/>
+        <result property="positionName" column="position_name"/>
+        <result property="positionLevel" column="position_level"/>
+        <result property="baseSalary" column="base_salary"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+    
+    <!-- 岗位VO结果映射 -->
+    <resultMap id="PositionVOResultMap" type="com.company.ems.vo.PositionVO">
+        <id property="positionId" column="position_id"/>
+        <result property="positionName" column="position_name"/>
+        <result property="positionLevel" column="position_level"/>
+        <result property="baseSalary" column="base_salary"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="employeeCount" column="employee_count"/>
+    </resultMap>
+    
+    <!-- 新增岗位 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Position" useGeneratedKeys="true" keyProperty="positionId">
+        INSERT INTO position_info (
+            position_name, position_level, base_salary, description, status, 
+            created_at, updated_at
+        ) VALUES (
+            #{positionName}, #{positionLevel}, #{baseSalary}, #{description}, #{status},
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+    </insert>
+    
+    <!-- 更新岗位 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Position">
+        UPDATE position_info
+        <set>
+            <if test="positionName != null">position_name = #{positionName},</if>
+            <if test="positionLevel != null">position_level = #{positionLevel},</if>
+            <if test="baseSalary != null">base_salary = #{baseSalary},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE position_id = #{positionId}
+    </update>
+    
+    <!-- 删除岗位（软删除） -->
+    <update id="deleteById">
+        UPDATE position_info
+        SET status = 'deleted', updated_at = CURRENT_TIMESTAMP
+        WHERE position_id = #{positionId}
+    </update>
+    
+    <!-- 根据ID查询岗位 -->
+    <select id="findById" resultMap="PositionResultMap">
+        SELECT position_id, position_name, position_level, base_salary, description,
+               status, created_at, updated_at
+        FROM position_info
+        WHERE position_id = #{positionId}
+          AND status != 'deleted'
+    </select>
+    
+    <!-- 查询岗位列表 -->
+    <select id="findList" resultMap="PositionVOResultMap">
+        SELECT 
+            p.position_id, p.position_name, p.position_level, p.base_salary, 
+            p.description, p.status, p.created_at, p.updated_at,
+            COUNT(DISTINCT a.employee_id) AS employee_count
+        FROM position_info p
+        LEFT JOIN assignment_info a ON p.position_id = a.position_id AND a.status = 'active'
+        WHERE p.status != 'deleted'
+        GROUP BY p.position_id, p.position_name, p.position_level, p.base_salary, 
+                 p.description, p.status, p.created_at, p.updated_at
+        ORDER BY p.position_id ASC
+    </select>
+    
+    <!-- 根据ID查询岗位详情 -->
+    <select id="findDetailById" resultMap="PositionVOResultMap">
+        SELECT 
+            p.position_id, p.position_name, p.position_level, p.base_salary, 
+            p.description, p.status, p.created_at, p.updated_at,
+            COUNT(DISTINCT a.employee_id) AS employee_count
+        FROM position_info p
+        LEFT JOIN assignment_info a ON p.position_id = a.position_id AND a.status = 'active'
+        WHERE p.position_id = #{positionId}
+          AND p.status != 'deleted'
+        GROUP BY p.position_id, p.position_name, p.position_level, p.base_salary, 
+                 p.description, p.status, p.created_at, p.updated_at
+    </select>
+    
+    <!-- 根据岗位ID查询员工数量 -->
+    <select id="countEmployeesByPositionId" resultType="int">
+        SELECT COUNT(DISTINCT a.employee_id)
+        FROM assignment_info a
+        WHERE a.position_id = #{positionId}
+          AND a.status = 'active'
+    </select>
+    
+</mapper>
