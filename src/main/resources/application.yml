@@ -78,7 +78,7 @@ logging:
 jwt:
   # JWT密钥 (请修改为你自己的密钥，建议使用32位以上随机字符串)
   secret: hannah1222_EMS_JWT_Secret_Key_2024_!@#$%^&*()
-  # Token有效期（单位：毫秒，默认24小时）
+  # Token有效期（单位：毫秒，24小时 = 86400000毫秒）
   expiration: 86400000
   # Token请求头名称
   header: Authorization

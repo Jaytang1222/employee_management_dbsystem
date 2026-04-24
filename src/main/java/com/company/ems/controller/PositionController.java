@@ -1,7 +1,9 @@
 package com.company.ems.controller;
 
 import com.company.ems.dto.PositionDTO;
+import com.company.ems.dto.PositionQueryDTO;
 import com.company.ems.service.PositionService;
+import com.company.ems.vo.PageResult;
 import com.company.ems.vo.PositionVO;
 import com.company.ems.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -79,14 +81,27 @@ public class PositionController {
     }
     
     /**
-     * 查询岗位列表
+     * 查询岗位列表（分页+条件查询）
+     * 
+     * @param queryDTO 查询参数
+     * @return 分页结果
+     */
+    @GetMapping
+    public Result<PageResult<PositionVO>> getPositionList(PositionQueryDTO queryDTO) {
+        log.info("查询岗位列表：pageNum={}, pageSize={}", queryDTO.getPageNum(), queryDTO.getPageSize());
+        PageResult<PositionVO> pageResult = positionService.getPositionList(queryDTO);
+        return Result.success(pageResult);
+    }
+    
+    /**
+     * 查询所有岗位（不分页，用于下拉选择）
      * 
      * @return 岗位列表
      */
-    @GetMapping
-    public Result<List<PositionVO>> getPositionList() {
-        log.info("查询岗位列表");
-        List<PositionVO> list = positionService.getPositionList();
+    @GetMapping("/all")
+    public Result<List<PositionVO>> getAllPositions() {
+        log.info("查询所有岗位");
+        List<PositionVO> list = positionService.getAllPositions();
         return Result.success(list);
     }
 }

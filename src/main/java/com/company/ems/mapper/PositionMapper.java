@@ -1,5 +1,6 @@
 package com.company.ems.mapper;
 
+import com.company.ems.dto.PositionQueryDTO;
 import com.company.ems.entity.Position;
 import com.company.ems.vo.PositionVO;
 import org.apache.ibatis.annotations.Param;
@@ -46,11 +47,27 @@ public interface PositionMapper {
     Position findById(@Param("positionId") Integer positionId);
     
     /**
-     * 查询岗位列表
+     * 查询岗位列表（带分页和条件查询）
+     * 
+     * @param queryDTO 查询参数
+     * @return 岗位列表
+     */
+    List<PositionVO> findList(PositionQueryDTO queryDTO);
+    
+    /**
+     * 统计岗位总数（带条件）
+     * 
+     * @param queryDTO 查询参数
+     * @return 总数
+     */
+    Long countList(PositionQueryDTO queryDTO);
+    
+    /**
+     * 查询所有岗位（不分页）
      * 
      * @return 岗位列表
      */
-    List<PositionVO> findList();
+    List<PositionVO> findAll();
     
     /**
      * 根据ID查询岗位详情（包含员工数量）

@@ -70,7 +70,7 @@
           AND status != 'deleted'
     </select>
     
-    <!-- 查询岗位列表 -->
+    <!-- 查询岗位列表（分页） -->
     <select id="findList" resultMap="PositionVOResultMap">
         SELECT 
             p.position_id, p.position_name, p.position_level, p.base_salary, 
@@ -78,7 +78,53 @@
             COUNT(DISTINCT a.employee_id) AS employee_count
         FROM position_info p
         LEFT JOIN assignment_info a ON p.position_id = a.position_id AND a.status = 'active'
-        WHERE p.status != 'deleted'
+        <where>
+            p.status != 'deleted'
+            <if test="positionName != null and positionName != ''">
+                AND p.position_name LIKE CONCAT('%', #{positionName}, '%')
+            </if>
+            <if test="positionLevel != null and positionLevel != ''">
+                AND p.position_level = #{positionLevel}
+            </if>
+            <if test="status != null and status != ''">
+                AND p.status = #{status}
+            </if>
+        </where>
+        GROUP BY p.position_id, p.position_name, p.position_level, p.base_salary, 
+                 p.description, p.status, p.created_at, p.updated_at
+        ORDER BY p.position_id ASC
+        <if test="pageSize != null and pageNum != null">
+            LIMIT #{pageSize} OFFSET #{pageNum}
+        </if>
+    </select>
+    
+    <!-- 统计岗位总数 -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(DISTINCT p.position_id)
+        FROM position_info p
+        <where>
+            p.status != 'deleted'
+            <if test="positionName != null and positionName != ''">
+                AND p.position_name LIKE CONCAT('%', #{positionName}, '%')
+            </if>
+            <if test="positionLevel != null and positionLevel != ''">
+                AND p.position_level = #{positionLevel}
+            </if>
+            <if test="status != null and status != ''">
+                AND p.status = #{status}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 查询所有岗位（不分页） -->
+    <select id="findAll" resultMap="PositionVOResultMap">
+        SELECT 
+            p.position_id, p.position_name, p.position_level, p.base_salary, 
+            p.description, p.status, p.created_at, p.updated_at,
+            COUNT(DISTINCT a.employee_id) AS employee_count
+        FROM position_info p
+        LEFT JOIN assignment_info a ON p.position_id = a.position_id AND a.status = 'active'
+        WHERE p.status = 'active'
         GROUP BY p.position_id, p.position_name, p.position_level, p.base_salary, 
                  p.description, p.status, p.created_at, p.updated_at
         ORDER BY p.position_id ASC

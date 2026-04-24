@@ -119,7 +119,7 @@
                 AND a.attendance_date &lt;= #{endDate}
             </if>
         </where>
-        ORDER BY a.attendance_date DESC, a.created_at DESC
+        ORDER BY a.attendance_date DESC, a.attendance_id DESC
         LIMIT #{pageSize} OFFSET #{pageNum}
     </select>
 

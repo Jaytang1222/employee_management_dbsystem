@@ -1,6 +1,7 @@
 package com.company.ems.service;
 
 import com.company.ems.dto.AssignmentDTO;
+import com.company.ems.dto.AssignmentQueryDTO;
 import com.company.ems.entity.Assignment;
 import com.company.ems.entity.Department;
 import com.company.ems.entity.Employee;
@@ -11,6 +12,7 @@ import com.company.ems.mapper.DepartmentMapper;
 import com.company.ems.mapper.EmployeeMapper;
 import com.company.ems.mapper.PositionMapper;
 import com.company.ems.vo.AssignmentVO;
+import com.company.ems.vo.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -257,5 +259,29 @@ public class AssignmentService {
         }
         
         log.info("删除员工分配成功：分配ID={}", assignmentId);
+    }
+    
+    /**
+     * 查询员工分配列表（分页）
+     * 
+     * @param queryDTO 查询参数
+     * @return 分页结果
+     */
+    public PageResult<AssignmentVO> getAssignmentList(AssignmentQueryDTO queryDTO) {
+        // 1. 保存原始页码
+        int currentPage = queryDTO.getPageNum();
+        
+        // 2. 计算分页偏移量
+        int offset = (currentPage - 1) * queryDTO.getPageSize();
+        queryDTO.setPageNum(offset);
+        
+        // 3. 查询总数
+        Long total = assignmentMapper.countList(queryDTO);
+        
+        // 4. 查询列表
+        List<AssignmentVO> records = assignmentMapper.findList(queryDTO);
+        
+        // 5. 使用原始页码构造分页结果
+        return new PageResult<>(total, records, currentPage, queryDTO.getPageSize());
     }
 }

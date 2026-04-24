@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -63,5 +64,19 @@ public class ExportController {
     public void exportPayrolls(PayrollQueryDTO queryDTO, HttpServletResponse response) {
         log.info("导出薪资记录请求：查询条件={}", queryDTO);
         exportService.exportPayrolls(queryDTO, response);
+    }
+    
+    /**
+     * 导出绩效排名
+     * 可选指定考核日期
+     * 
+     * @param evalDate 考核日期（可选）
+     * @param response HTTP响应对象
+     */
+    @GetMapping("/performance-ranking")
+    public void exportPerformanceRanking(@RequestParam(required = false) String evalDate, 
+                                         HttpServletResponse response) {
+        log.info("导出绩效排名请求：考核日期={}", evalDate);
+        exportService.exportPerformanceRanking(evalDate, response);
     }
 }

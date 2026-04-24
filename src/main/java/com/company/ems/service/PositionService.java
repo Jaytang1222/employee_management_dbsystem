@@ -1,9 +1,11 @@
 package com.company.ems.service;
 
 import com.company.ems.dto.PositionDTO;
+import com.company.ems.dto.PositionQueryDTO;
 import com.company.ems.entity.Position;
 import com.company.ems.exception.BusinessException;
 import com.company.ems.mapper.PositionMapper;
+import com.company.ems.vo.PageResult;
 import com.company.ems.vo.PositionVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -119,11 +121,35 @@ public class PositionService {
     }
     
     /**
-     * 查询岗位列表
+     * 查询岗位列表（分页）
+     * 
+     * @param queryDTO 查询参数
+     * @return 分页结果
+     */
+    public PageResult<PositionVO> getPositionList(PositionQueryDTO queryDTO) {
+        // 1. 保存原始页码
+        int currentPage = queryDTO.getPageNum();
+        
+        // 2. 计算分页偏移量
+        int offset = (currentPage - 1) * queryDTO.getPageSize();
+        queryDTO.setPageNum(offset);
+        
+        // 3. 查询总数
+        Long total = positionMapper.countList(queryDTO);
+        
+        // 4. 查询列表
+        List<PositionVO> records = positionMapper.findList(queryDTO);
+        
+        // 5. 使用原始页码构造分页结果
+        return new PageResult<>(total, records, currentPage, queryDTO.getPageSize());
+    }
+    
+    /**
+     * 查询所有岗位（不分页）
      * 
      * @return 岗位列表
      */
-    public List<PositionVO> getPositionList() {
-        return positionMapper.findList();
+    public List<PositionVO> getAllPositions() {
+        return positionMapper.findAll();
     }
 }

@@ -159,4 +159,57 @@
           AND status = 'active'
     </select>
 
+    <!-- 查询员工分配列表（分页） -->
+    <select id="findList" resultMap="AssignmentVOMap">
+        SELECT 
+            a.assignment_id,
+            a.employee_id,
+            e.name AS employee_name,
+            a.dept_id,
+            d.dept_name,
+            a.position_id,
+            p.position_name,
+            a.start_date,
+            a.is_primary,
+            a.change_reason,
+            a.status,
+            a.created_at
+        FROM assignment_info a
+        LEFT JOIN employee_info e ON a.employee_id = e.employee_id
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        <where>
+            <if test="employeeId != null">
+                AND a.employee_id = #{employeeId}
+            </if>
+            <if test="deptId != null">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="positionId != null">
+                AND a.position_id = #{positionId}
+            </if>
+        </where>
+        ORDER BY a.assignment_id ASC
+        <if test="pageSize != null and pageNum != null">
+            LIMIT #{pageSize} OFFSET #{pageNum}
+        </if>
+    </select>
+
+    <!-- 统计员工分配总数 -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(*)
+        FROM assignment_info a
+        <where>
+            <if test="employeeId != null">
+                AND a.employee_id = #{employeeId}
+            </if>
+            <if test="deptId != null">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="positionId != null">
+                AND a.position_id = #{positionId}
+            </if>
+        </where>
+    </select>
+
 </mapper>
