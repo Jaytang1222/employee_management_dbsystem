@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.PerformanceMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="PerformanceVOMap" type="com.company.ems.vo.PerformanceVO">
+        <id property="performanceId" column="performance_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="evalDate" column="eval_date"/>
+        <result property="score" column="score"/>
+        <result property="grade" column="grade"/>
+        <result property="comment" column="comment"/>
+        <result property="evaluateDate" column="evaluate_date"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="PerformanceRankingVOMap" type="com.company.ems.vo.PerformanceRankingVO">
+        <result property="ranking" column="ranking"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="evalDate" column="eval_date"/>
+        <result property="score" column="score"/>
+        <result property="grade" column="grade"/>
+    </resultMap>
+
+    <!-- 新增绩效记录 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Performance" 
+            useGeneratedKeys="true" keyProperty="performanceId">
+        INSERT INTO performance_info (
+            employee_id, eval_date, score, grade, comment,
+            evaluate_date, created_at
+        ) VALUES (
+            #{employeeId}, #{evalDate}, #{score}, #{grade}, #{comment},
+            #{evaluateDate}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 根据ID更新绩效记录 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Performance">
+        UPDATE performance_info
+        SET employee_id = #{employeeId},
+            eval_date = #{evalDate},
+            score = #{score},
+            grade = #{grade},
+            comment = #{comment},
+            evaluate_date = #{evaluateDate}
+        WHERE performance_id = #{performanceId}
+    </update>
+
+    <!-- 根据ID删除绩效记录 -->
+    <delete id="deleteById">
+        DELETE FROM performance_info
+        WHERE performance_id = #{performanceId}
+    </delete>
+
+    <!-- 根据ID查询绩效记录 -->
+    <select id="findById" resultType="com.company.ems.entity.Performance">
+        SELECT 
+            performance_id, employee_id, eval_date, score, grade,
+            comment, evaluate_date, created_at
+        FROM performance_info
+        WHERE performance_id = #{performanceId}
+    </select>
+
+    <!-- 根据ID查询绩效详情（包含员工信息） -->
+    <select id="findDetailById" resultMap="PerformanceVOMap">
+        SELECT 
+            p.performance_id,
+            p.employee_id,
+            e.name AS employee_name,
+            p.eval_date,
+            p.score,
+            p.grade,
+            p.comment,
+            p.evaluate_date,
+            p.created_at
+        FROM performance_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        WHERE p.performance_id = #{performanceId}
+    </select>
+
+    <!-- 查询绩效列表（带分页和条件查询） -->
+    <select id="findList" resultMap="PerformanceVOMap">
+        SELECT 
+            p.performance_id,
+            p.employee_id,
+            e.name AS employee_name,
+            p.eval_date,
+            p.score,
+            p.grade,
+            p.comment,
+            p.evaluate_date,
+            p.created_at
+        FROM performance_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND p.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="grade != null and grade != ''">
+                AND p.grade = #{grade}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND p.eval_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND p.eval_date &lt;= #{endDate}
+            </if>
+        </where>
+        ORDER BY p.eval_date DESC, p.score DESC, p.created_at DESC
+        LIMIT #{pageSize} OFFSET #{pageNum}
+    </select>
+
+    <!-- 统计绩效总数（带条件） -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(*)
+        FROM performance_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        <where>
+            <if test="employeeId != null">
+                AND p.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="grade != null and grade != ''">
+                AND p.grade = #{grade}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND p.eval_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND p.eval_date &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询绩效排名 -->
+    <select id="getPerformanceRanking" resultMap="PerformanceRankingVOMap">
+        SELECT 
+            ROW_NUMBER() OVER (ORDER BY p.score DESC) AS ranking,
+            p.employee_id,
+            e.name AS employee_name,
+            p.eval_date,
+            p.score,
+            p.grade
+        FROM performance_info p
+        LEFT JOIN employee_info e ON p.employee_id = e.employee_id
+        <where>
+            <if test="evalDate != null and evalDate != ''">
+                AND p.eval_date = #{evalDate}
+            </if>
+        </where>
+        ORDER BY p.score DESC
+    </select>
+
+</mapper>

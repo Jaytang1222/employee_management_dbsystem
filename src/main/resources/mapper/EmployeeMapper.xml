@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.ems.mapper.EmployeeMapper">
+    
+    <!-- 员工结果映射 -->
+    <resultMap id="EmployeeResultMap" type="com.company.ems.entity.Employee">
+        <id property="employeeId" column="employee_id"/>
+        <result property="idCard" column="id_card"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="hireDate" column="hire_date"/>
+        <result property="status" column="status"/>
+        <result property="educationLevel" column="education_level"/>
+        <result property="emergencyContact" column="emergency_contact"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+    
+    <!-- 员工VO结果映射 -->
+    <resultMap id="EmployeeVOResultMap" type="com.company.ems.vo.EmployeeVO">
+        <id property="employeeId" column="employee_id"/>
+        <result property="idCard" column="id_card"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="hireDate" column="hire_date"/>
+        <result property="status" column="status"/>
+        <result property="educationLevel" column="education_level"/>
+        <result property="emergencyContact" column="emergency_contact"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="primaryDeptName" column="primary_dept_name"/>
+        <result property="primaryPositionName" column="primary_position_name"/>
+    </resultMap>
+    
+    <!-- 新增员工 -->
+    <insert id="insert" parameterType="com.company.ems.entity.Employee" useGeneratedKeys="true" keyProperty="employeeId">
+        INSERT INTO employee_info (
+            id_card, name, gender, birth_date, phone, email, address, 
+            hire_date, status, education_level, emergency_contact, 
+            created_at, updated_at
+        ) VALUES (
+            #{idCard}, #{name}, #{gender}, #{birthDate}, #{phone}, #{email}, #{address},
+            #{hireDate}, #{status}, #{educationLevel}, #{emergencyContact},
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+    </insert>
+    
+    <!-- 更新员工 -->
+    <update id="updateById" parameterType="com.company.ems.entity.Employee">
+        UPDATE employee_info
+        <set>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="hireDate != null">hire_date = #{hireDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="educationLevel != null">education_level = #{educationLevel},</if>
+            <if test="emergencyContact != null">emergency_contact = #{emergencyContact},</if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE employee_id = #{employeeId}
+    </update>
+    
+    <!-- 删除员工（软删除） -->
+    <update id="deleteById">
+        UPDATE employee_info
+        SET status = 'deleted', updated_at = CURRENT_TIMESTAMP
+        WHERE employee_id = #{employeeId}
+    </update>
+    
+    <!-- 根据ID查询员工 -->
+    <select id="findById" resultMap="EmployeeResultMap">
+        SELECT employee_id, id_card, name, gender, birth_date, phone, email, address,
+               hire_date, status, education_level, emergency_contact, created_at, updated_at
+        FROM employee_info
+        WHERE employee_id = #{employeeId}
+          AND status != 'deleted'
+    </select>
+    
+    <!-- 根据身份证号查询员工 -->
+    <select id="findByIdCard" resultMap="EmployeeResultMap">
+        SELECT employee_id, id_card, name, gender, birth_date, phone, email, address,
+               hire_date, status, education_level, emergency_contact, created_at, updated_at
+        FROM employee_info
+        WHERE id_card = #{idCard}
+          AND status != 'deleted'
+    </select>
+    
+    <!-- 查询员工列表 -->
+    <select id="findList" resultMap="EmployeeVOResultMap">
+        SELECT 
+            e.employee_id, e.id_card, e.name, e.gender, e.birth_date, e.phone, e.email, 
+            e.address, e.hire_date, e.status, e.education_level, e.emergency_contact, 
+            e.created_at, e.updated_at,
+            d.dept_name AS primary_dept_name,
+            p.position_name AS primary_position_name
+        FROM employee_info e
+        LEFT JOIN assignment_info a ON e.employee_id = a.employee_id AND a.is_primary = true AND a.status = 'active'
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        <where>
+            e.status != 'deleted'
+            <if test="name != null and name != ''">
+                AND e.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="deptId != null">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="positionId != null">
+                AND a.position_id = #{positionId}
+            </if>
+            <if test="status != null and status != ''">
+                AND e.status = #{status}
+            </if>
+        </where>
+        ORDER BY e.employee_id DESC
+        <if test="pageSize != null and pageNum != null">
+            LIMIT #{pageSize} OFFSET #{pageNum}
+        </if>
+    </select>
+    
+    <!-- 统计员工总数 -->
+    <select id="countList" resultType="long">
+        SELECT COUNT(DISTINCT e.employee_id)
+        FROM employee_info e
+        LEFT JOIN assignment_info a ON e.employee_id = a.employee_id AND a.is_primary = true AND a.status = 'active'
+        <where>
+            e.status != 'deleted'
+            <if test="name != null and name != ''">
+                AND e.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="deptId != null">
+                AND a.dept_id = #{deptId}
+            </if>
+            <if test="positionId != null">
+                AND a.position_id = #{positionId}
+            </if>
+            <if test="status != null and status != ''">
+                AND e.status = #{status}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 根据ID查询员工详情 -->
+    <select id="findDetailById" resultMap="EmployeeVOResultMap">
+        SELECT 
+            e.employee_id, e.id_card, e.name, e.gender, e.birth_date, e.phone, e.email, 
+            e.address, e.hire_date, e.status, e.education_level, e.emergency_contact, 
+            e.created_at, e.updated_at,
+            d.dept_name AS primary_dept_name,
+            p.position_name AS primary_position_name
+        FROM employee_info e
+        LEFT JOIN assignment_info a ON e.employee_id = a.employee_id AND a.is_primary = true AND a.status = 'active'
+        LEFT JOIN department_info d ON a.dept_id = d.dept_id
+        LEFT JOIN position_info p ON a.position_id = p.position_id
+        WHERE e.employee_id = #{employeeId}
+          AND e.status != 'deleted'
+    </select>
+    
+</mapper>
