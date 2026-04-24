@@ -203,18 +203,21 @@ public class AttendanceService {
      * @return 分页结果
      */
     public PageResult<AttendanceVO> getAttendanceList(AttendanceQueryDTO queryDTO) {
-        // 1. 计算分页偏移量
-        int offset = (queryDTO.getPageNum() - 1) * queryDTO.getPageSize();
+        // 1. 保存原始页码
+        int currentPage = queryDTO.getPageNum();
+        
+        // 2. 计算分页偏移量
+        int offset = (currentPage - 1) * queryDTO.getPageSize();
         queryDTO.setPageNum(offset);
         
-        // 2. 查询总数
+        // 3. 查询总数
         Long total = attendanceMapper.countList(queryDTO);
         
-        // 3. 查询列表
+        // 4. 查询列表
         List<AttendanceVO> records = attendanceMapper.findList(queryDTO);
         
-        // 4. 构造分页结果
-        return new PageResult<>(total, records, queryDTO.getPageNum() / queryDTO.getPageSize() + 1, queryDTO.getPageSize());
+        // 5. 使用原始页码构造分页结果
+        return new PageResult<>(total, records, currentPage, queryDTO.getPageSize());
     }
     
     /**

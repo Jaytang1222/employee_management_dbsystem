@@ -1,5 +1,6 @@
 package com.company.ems.mapper;
 
+import com.company.ems.dto.AssignmentQueryDTO;
 import com.company.ems.entity.Assignment;
 import com.company.ems.vo.AssignmentVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -88,4 +89,20 @@ public interface AssignmentMapper {
      * @return 数量
      */
     int countByEmployeeAndDept(@Param("employeeId") Integer employeeId, @Param("deptId") Integer deptId);
+    
+    /**
+     * 查询员工分配列表（带分页和条件查询）
+     * 
+     * @param queryDTO 查询参数
+     * @return 分配列表
+     */
+    List<AssignmentVO> findList(AssignmentQueryDTO queryDTO);
+    
+    /**
+     * 统计员工分配总数（带条件）
+     * 
+     * @param queryDTO 查询参数
+     * @return 总数
+     */
+    Long countList(AssignmentQueryDTO queryDTO);
 }

@@ -1,8 +1,10 @@
 package com.company.ems.controller;
 
 import com.company.ems.dto.AssignmentDTO;
+import com.company.ems.dto.AssignmentQueryDTO;
 import com.company.ems.service.AssignmentService;
 import com.company.ems.vo.AssignmentVO;
+import com.company.ems.vo.PageResult;
 import com.company.ems.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +95,19 @@ public class AssignmentController {
         log.info("查询员工历史分配：员工ID={}", employeeId);
         List<AssignmentVO> history = assignmentService.getAssignmentHistory(employeeId);
         return Result.success(history);
+    }
+    
+    /**
+     * 查询员工分配列表（分页+条件查询）
+     * 
+     * @param queryDTO 查询参数
+     * @return 分页结果
+     */
+    @GetMapping
+    public Result<PageResult<AssignmentVO>> getAssignmentList(AssignmentQueryDTO queryDTO) {
+        log.info("查询员工分配列表：pageNum={}, pageSize={}", queryDTO.getPageNum(), queryDTO.getPageSize());
+        PageResult<AssignmentVO> pageResult = assignmentService.getAssignmentList(queryDTO);
+        return Result.success(pageResult);
     }
     
     /**

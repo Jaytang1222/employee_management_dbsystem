@@ -113,7 +113,7 @@
                 AND p.eval_date &lt;= #{endDate}
             </if>
         </where>
-        ORDER BY p.eval_date DESC, p.score DESC, p.created_at DESC
+        ORDER BY p.eval_date DESC, p.score DESC, p.performance_id DESC
         LIMIT #{pageSize} OFFSET #{pageNum}
     </select>
 
@@ -144,7 +144,7 @@
     <!-- 查询绩效排名 -->
     <select id="getPerformanceRanking" resultMap="PerformanceRankingVOMap">
         SELECT 
-            ROW_NUMBER() OVER (ORDER BY p.score DESC) AS ranking,
+            ROW_NUMBER() OVER (ORDER BY p.score DESC, p.performance_id ASC) AS ranking,
             p.employee_id,
             e.name AS employee_name,
             p.eval_date,
@@ -157,7 +157,7 @@
                 AND p.eval_date = #{evalDate}
             </if>
         </where>
-        ORDER BY p.score DESC
+        ORDER BY p.score DESC, p.performance_id ASC
     </select>
 
 </mapper>

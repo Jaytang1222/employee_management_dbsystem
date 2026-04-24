@@ -127,7 +127,7 @@
                 AND e.status = #{status}
             </if>
         </where>
-        ORDER BY e.employee_id DESC
+        ORDER BY e.employee_id ASC
         <if test="pageSize != null and pageNum != null">
             LIMIT #{pageSize} OFFSET #{pageNum}
         </if>

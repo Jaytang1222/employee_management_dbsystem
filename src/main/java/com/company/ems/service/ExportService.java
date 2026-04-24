@@ -11,6 +11,7 @@ import com.company.ems.util.ExcelUtil;
 import com.company.ems.vo.AttendanceVO;
 import com.company.ems.vo.EmployeeVO;
 import com.company.ems.vo.PayrollVO;
+import com.company.ems.vo.PerformanceRankingVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ExportService {
     
     @Autowired
     private PayrollMapper payrollMapper;
+    
+    @Autowired
+    private PerformanceService performanceService;
     
     /**
      * 导出员工列表
@@ -200,6 +204,69 @@ public class ExportService {
         ExcelUtil.exportExcel(headers, dataList, fileName, response);
         
         log.info("薪资记录导出完成，共{}条记录", payrolls.size());
+    }
+    
+    /**
+     * 导出绩效排名
+     * 
+     * @param evalDate 考核日期（可选）
+     * @param response HTTP响应对象
+     */
+    public void exportPerformanceRanking(String evalDate, HttpServletResponse response) {
+        log.info("开始导出绩效排名");
+        
+        // 1. 查询绩效排名数据
+        List<PerformanceRankingVO> rankings = performanceService.getPerformanceRanking(evalDate);
+        
+        if (rankings == null || rankings.isEmpty()) {
+            throw new BusinessException("没有可导出的绩效排名数据");
+        }
+        
+        // 2. 定义表头
+        String[] headers = {
+            "排名", "员工ID", "员工姓名", "考核日期", "分数", "等级"
+        };
+        
+        // 3. 转换数据
+        List<Object[]> dataList = new ArrayList<>();
+        for (PerformanceRankingVO ranking : rankings) {
+            Object[] row = {
+                ranking.getRanking(),
+                ranking.getEmployeeId(),
+                ranking.getEmployeeName(),
+                ranking.getEvalDate(),
+                ranking.getScore(),
+                getGradeText(ranking.getGrade())
+            };
+            dataList.add(row);
+        }
+        
+        // 4. 导出Excel
+        String fileName = "绩效排名_" + (evalDate != null ? evalDate : "全部") + "_" + System.currentTimeMillis();
+        ExcelUtil.exportExcel(headers, dataList, fileName, response);
+        
+        log.info("绩效排名导出完成，共{}条记录", rankings.size());
+    }
+    
+    /**
+     * 转换绩效等级为中文
+     */
+    private String getGradeText(String grade) {
+        if (grade == null) {
+            return "";
+        }
+        switch (grade) {
+            case "A":
+                return "优秀";
+            case "B":
+                return "良好";
+            case "C":
+                return "合格";
+            case "D":
+                return "不合格";
+            default:
+                return grade;
+        }
     }
     
     /**
