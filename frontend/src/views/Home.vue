@@ -129,32 +129,52 @@ onMounted(() => {
 
 <style scoped>
 .home-container {
-  padding: 20px;
+  padding: 24px;
   width: 100%;
   max-width: 100%;
 }
 
 .home-container h2 {
-  margin: 0 0 20px 0;
-  color: #333;
+  margin: 0 0 32px 0;
+  color: #000000;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #76b900;
+  padding-bottom: 16px;
 }
 
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .stats-card {
   margin-bottom: 20px;
+  border-radius: 2px;
+  border: 1px solid #5e5e5e;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px 0px;
+  transition: all 0.3s;
+}
+
+.stats-card:hover {
+  border-color: #76b900;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px 0px;
+}
+
+.stats-card :deep(.el-card__body) {
+  padding: 24px;
 }
 
 .stats-content {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .stats-icon {
-  font-size: 48px;
+  font-size: 56px;
 }
 
 .stats-info {
@@ -162,36 +182,89 @@ onMounted(() => {
 }
 
 .stats-value {
-  font-size: 32px;
-  font-weight: bold;
-  color: #333;
-  line-height: 1;
+  font-size: 36px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.25;
   margin-bottom: 8px;
 }
 
 .stats-label {
-  font-size: 14px;
-  color: #999;
+  font-size: 15px;
+  font-weight: 700;
+  color: #757575;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .content-row {
-  margin-top: 20px;
+  margin-top: 32px;
+}
+
+.content-row :deep(.el-card) {
+  border-radius: 2px;
+  border: 1px solid #5e5e5e;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px 0px;
+  transition: all 0.3s;
+}
+
+.content-row :deep(.el-card:hover) {
+  border-color: #76b900;
+}
+
+.content-row :deep(.el-card__header) {
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #76b900;
+  padding: 16px 24px;
+}
+
+.content-row :deep(.el-table) {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.content-row :deep(.el-table th) {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.content-row :deep(.el-table td) {
+  font-size: 15px;
+  color: #000000;
+}
+
+.content-row :deep(.el-table tr:hover > td) {
+  background-color: rgba(118, 185, 0, 0.1);
 }
 
 .welcome-text {
-  padding: 20px;
+  padding: 32px;
   text-align: center;
 }
 
 .welcome-text p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #666;
+  margin: 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.67;
 }
 
 @media screen and (max-width: 768px) {
   .home-container {
-    padding: 10px;
+    padding: 16px;
+  }
+  
+  .home-container h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
   }
   
   .stats-value {
@@ -199,7 +272,11 @@ onMounted(() => {
   }
   
   .stats-icon {
-    font-size: 36px;
+    font-size: 40px;
+  }
+  
+  .stats-content {
+    gap: 16px;
   }
 }
 </style>

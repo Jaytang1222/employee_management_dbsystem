@@ -235,18 +235,24 @@ onMounted(() => {
 
 <style scoped>
 .statistics-container {
-  padding: 20px;
+  padding: 24px;
   width: 100%;
   max-width: 100%;
 }
 
 .search-form {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #76b900;
 }
 
 @media screen and (max-width: 768px) {
   .statistics-container {
-    padding: 10px;
+    padding: 16px;
+  }
+  
+  .search-form :deep(.el-form-item) {
+    width: 100%;
   }
 }
 </style>
