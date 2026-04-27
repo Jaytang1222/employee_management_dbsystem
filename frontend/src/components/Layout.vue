@@ -214,9 +214,10 @@ onMounted(() => {
 }
 
 .layout-aside {
-  background-color: #304156;
+  background-color: #000000;
   transition: width 0.3s;
   overflow-x: hidden;
+  border-right: 1px solid #5e5e5e;
 }
 
 .logo {
@@ -224,38 +225,53 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  background-color: #2b3a4a;
+  color: #76b900;
+  font-size: 24px;
+  font-weight: 700;
+  background-color: #000000;
+  border-bottom: 2px solid #76b900;
+  letter-spacing: 2px;
 }
 
 .layout-menu {
   border-right: none;
-  background-color: #304156;
+  background-color: #000000;
 }
 
 .layout-menu :deep(.el-menu-item) {
-  color: #bfcbd9;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-left: 2px solid transparent;
+  transition: all 0.3s;
 }
 
 .layout-menu :deep(.el-menu-item:hover) {
-  background-color: #263445 !important;
-  color: #fff;
+  background-color: #1a1a1a !important;
+  color: #76b900;
+  border-left-color: #76b900;
 }
 
 .layout-menu :deep(.el-menu-item.is-active) {
-  background-color: #409eff !important;
-  color: #fff;
+  background-color: #1a1a1a !important;
+  color: #76b900;
+  border-left-color: #76b900;
+}
+
+.layout-menu :deep(.el-menu-item .el-icon) {
+  color: inherit;
 }
 
 .layout-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  border-bottom: 1px solid #e6e6e6;
+  background-color: #000000;
+  border-bottom: 2px solid #76b900;
   padding: 0 20px;
+  height: 60px;
 }
 
 .header-left {
@@ -268,10 +284,11 @@ onMounted(() => {
   font-size: 20px;
   cursor: pointer;
   transition: color 0.3s;
+  color: #ffffff;
 }
 
 .collapse-icon:hover {
-  color: #409eff;
+  color: #76b900;
 }
 
 .header-right {
@@ -286,19 +303,25 @@ onMounted(() => {
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  padding: 8px 13px;
+  border-radius: 2px;
+  transition: all 0.3s;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 2px solid transparent;
 }
 
 .language-switch:hover,
 .user-info:hover {
-  background-color: #f5f5f5;
+  background-color: #1eaedb;
+  border-color: #76b900;
 }
 
 .layout-main {
-  background-color: #f0f2f5;
-  padding: 20px;
+  background-color: #ffffff;
+  padding: 24px;
   overflow-y: auto;
   width: 100%;
   max-width: 100%;
@@ -327,7 +350,13 @@ onMounted(() => {
   }
   
   .layout-main {
-    padding: 10px;
+    padding: 16px;
+  }
+  
+  .language-switch,
+  .user-info {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
 </style>

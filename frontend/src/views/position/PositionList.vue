@@ -217,23 +217,33 @@ onMounted(() => {
 
 <style scoped>
 .position-container {
-  padding: 20px;
+  padding: 24px;
   width: 100%;
   max-width: 100%;
 }
 
 .toolbar {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .pagination {
-  margin-top: 20px;
+  margin-top: 24px;
   justify-content: flex-end;
 }
 
 @media screen and (max-width: 768px) {
   .position-container {
-    padding: 10px;
+    padding: 16px;
+  }
+  
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .toolbar :deep(.el-button) {
+    width: 100%;
   }
 }
 </style>

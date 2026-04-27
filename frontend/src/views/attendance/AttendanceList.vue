@@ -342,21 +342,43 @@ onMounted(() => {
 
 <style scoped>
 .attendance-container {
-  padding: 20px;
+  padding: 24px;
   width: 100%;
   max-width: 100%;
 }
 
 .search-form {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #76b900;
 }
 
 .toolbar {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .pagination {
-  margin-top: 20px;
+  margin-top: 24px;
   justify-content: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+  .attendance-container {
+    padding: 16px;
+  }
+  
+  .search-form :deep(.el-form-item) {
+    width: 100%;
+  }
+  
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .toolbar :deep(.el-button) {
+    width: 100%;
+  }
 }
 </style>
