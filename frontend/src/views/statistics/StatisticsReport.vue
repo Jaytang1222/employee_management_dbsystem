@@ -1,10 +1,11 @@
 <template>
   <div class="statistics-container">
+    <h2 class="page-title">{{ t('menu.statistics') }}</h2>
     <el-card>
       <el-tabs v-model="activeTab">
         <el-tab-pane :label="t('statistics.employeeStats')" name="employee">
           <el-table :data="employeeData" v-loading="employeeLoading" stripe>
-            <el-table-column prop="deptName" :label="t('statistics.departmentName')" />
+            <el-table-column prop="deptName" :label="t('statistics.departmentName')" min-width="200" />
             <el-table-column prop="employeeCount" :label="t('statistics.employeeCount')" width="150" />
           </el-table>
         </el-tab-pane>
@@ -47,11 +48,11 @@
           
           <el-table :data="attendanceData" v-loading="attendanceLoading" stripe>
             <el-table-column prop="employeeName" :label="t('attendance.employee')" width="120" />
-            <el-table-column prop="attendanceDays" :label="t('attendance.attendanceDays')" width="100" />
-            <el-table-column prop="lateTimes" :label="t('attendance.lateTimes')" width="100" />
-            <el-table-column prop="earlyLeaveTimes" :label="t('attendance.earlyLeaveTimes')" width="100" />
-            <el-table-column prop="totalOvertimeHours" :label="t('attendance.totalOvertimeHours')" width="120" />
-            <el-table-column prop="absentDays" :label="t('attendance.absentDays')" width="100" />
+            <el-table-column prop="attendanceDays" :label="t('attendance.attendanceDays')" width="120" />
+            <el-table-column prop="lateTimes" :label="t('attendance.lateTimes')" width="120" />
+            <el-table-column prop="earlyLeaveTimes" :label="t('attendance.earlyLeaveTimes')" width="130" />
+            <el-table-column prop="totalOvertimeHours" :label="t('attendance.totalOvertimeHours')" width="140" />
+            <el-table-column prop="absentDays" :label="t('attendance.absentDays')" min-width="120" />
           </el-table>
         </el-tab-pane>
         
@@ -76,10 +77,10 @@
           </el-form>
           
           <el-table :data="performanceData" v-loading="performanceLoading" stripe>
-            <el-table-column prop="ranking" :label="t('performance.rank')" width="80" align="center" />
+            <el-table-column prop="ranking" :label="t('performance.rank')" width="100" align="center" />
             <el-table-column prop="employeeName" :label="t('performance.employee')" width="150" />
-            <el-table-column prop="score" :label="t('performance.score')" width="100" align="center" />
-            <el-table-column prop="grade" :label="t('performance.grade')" width="120" align="center">
+            <el-table-column prop="score" :label="t('performance.score')" width="120" align="center" />
+            <el-table-column prop="grade" :label="t('performance.grade')" min-width="120" align="center">
               <template #default="{ row }">
                 <el-tag :type="getGradeType(row.grade)">
                   {{ getGradeText(row.grade) }}
@@ -238,6 +239,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.statistics-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.statistics-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.statistics-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.statistics-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.statistics-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .search-form {

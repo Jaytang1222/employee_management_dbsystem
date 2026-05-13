@@ -1,5 +1,6 @@
 <template>
   <div class="payroll-container">
+    <h2 class="page-title">{{ t('menu.payroll') }}</h2>
     <el-card>
       <el-form :model="queryForm" :inline="true" class="search-form">
         <el-form-item :label="t('payroll.month')">
@@ -33,17 +34,17 @@
       <el-table :data="tableData" v-loading="loading" stripe>
         <el-table-column prop="payrollId" label="ID" width="80" />
         <el-table-column prop="employeeName" :label="t('payroll.employee')" width="120" />
-        <el-table-column prop="payMonth" :label="t('payroll.month')" width="100" />
-        <el-table-column prop="basePay" :label="t('payroll.basePay')" width="100" />
-        <el-table-column prop="allowance" :label="t('payroll.allowance')" width="100" />
-        <el-table-column prop="bonus" :label="t('payroll.bonus')" width="100" />
-        <el-table-column prop="deduction" :label="t('payroll.deduction')" width="100" />
-        <el-table-column prop="netPay" :label="t('payroll.netPay')" width="120">
+        <el-table-column prop="payMonth" :label="t('payroll.month')" width="110" />
+        <el-table-column prop="basePay" :label="t('payroll.basePay')" width="110" />
+        <el-table-column prop="allowance" :label="t('payroll.allowance')" width="110" />
+        <el-table-column prop="bonus" :label="t('payroll.bonus')" width="110" />
+        <el-table-column prop="deduction" :label="t('payroll.deduction')" width="110" />
+        <el-table-column prop="netPay" :label="t('payroll.netPay')" min-width="120">
           <template #default="{ row }">
             <span style="color: #67c23a; font-weight: bold">{{ row.netPay }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.operation')" width="180" fixed="right">
+        <el-table-column :label="t('common.operation')" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" :icon="Edit" @click="handleEdit(row)">
               {{ t('common.edit') }}
@@ -303,6 +304,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.payroll-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.payroll-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.payroll-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.payroll-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.payroll-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .search-form {

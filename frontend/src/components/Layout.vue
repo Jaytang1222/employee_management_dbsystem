@@ -3,8 +3,8 @@
     <!-- 侧边栏 -->
     <el-aside :width="isCollapse ? '64px' : '200px'" class="layout-aside">
       <div class="logo">
-        <span v-if="!isCollapse">EMS</span>
-        <span v-else>E</span>
+        <img v-if="!isCollapse" src="/src/views/resources/logo.png" alt="Logo" class="logo-img" />
+        <img v-else src="/src/views/resources/logo.png" alt="Logo" class="logo-img-small" />
       </div>
       
       <el-menu
@@ -225,12 +225,28 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #76b900;
-  font-size: 24px;
-  font-weight: 700;
   background-color: #000000;
   border-bottom: 2px solid #76b900;
-  letter-spacing: 2px;
+  padding: 8px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(118, 185, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.logo-img-small {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(118, 185, 0, 0.3));
 }
 
 .layout-menu {
