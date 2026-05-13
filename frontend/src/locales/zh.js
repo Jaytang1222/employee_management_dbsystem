@@ -224,6 +224,37 @@ export default {
     todayAttendance: '今日考勤'
   },
 
+  // 首页
+  home: {
+    dashboard: '仪表盘',
+    overview: '概览',
+    lastUpdated: '最后更新',
+    vsLastMonth: '较上月',
+    vsLastQuarter: '较上季度',
+    noChange: '无变化',
+    attendanceRate: '出勤率',
+    recentActivities: '最近活动',
+    viewAll: '查看全部',
+    percentage: '占比',
+    quickActions: '快速操作',
+    addEmployee: '添加员工',
+    markAttendance: '标记考勤',
+    processPayroll: '处理薪资',
+    viewReports: '查看报表',
+    newEmployeeOnboarded: '新员工入职',
+    joinedDepartment: '加入部门',
+    attendanceAlert: '考勤提醒',
+    employeesMarkedLate: '名员工迟到',
+    performanceReviewCompleted: '绩效评审完成',
+    reviewsFinalized: '评审已完成',
+    departmentRestructure: '部门调整',
+    teamExpanded: '团队扩充至',
+    members: '名成员',
+    hoursAgo: '小时前',
+    daysAgo: '天前',
+    avgScore: '平均分数'
+  },
+
   // 分页
   pagination: {
     total: '共',

@@ -224,6 +224,37 @@ export default {
     todayAttendance: 'Today Attendance'
   },
 
+  // Home
+  home: {
+    dashboard: 'Dashboard',
+    overview: 'Overview',
+    lastUpdated: 'Last updated',
+    vsLastMonth: 'vs last month',
+    vsLastQuarter: 'vs last quarter',
+    noChange: 'No change',
+    attendanceRate: 'attendance rate',
+    recentActivities: 'Recent Activities',
+    viewAll: 'View All',
+    percentage: 'Percentage',
+    quickActions: 'Quick Actions',
+    addEmployee: 'Add Employee',
+    markAttendance: 'Mark Attendance',
+    processPayroll: 'Process Payroll',
+    viewReports: 'View Reports',
+    newEmployeeOnboarded: 'New employee onboarded',
+    joinedDepartment: 'joined',
+    attendanceAlert: 'Attendance alert',
+    employeesMarkedLate: 'employees marked late today',
+    performanceReviewCompleted: 'Performance review completed',
+    reviewsFinalized: 'reviews finalized for',
+    departmentRestructure: 'Department restructure',
+    teamExpanded: 'team expanded to',
+    members: 'members',
+    hoursAgo: 'hours ago',
+    daysAgo: 'days ago',
+    avgScore: 'Avg Score'
+  },
+
   // Pagination
   pagination: {
     total: 'Total',

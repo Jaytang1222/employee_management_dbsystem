@@ -1,5 +1,6 @@
 <template>
   <div class="department-container">
+    <h2 class="page-title">{{ t('menu.department') }}</h2>
     <el-card>
       <div class="toolbar">
         <el-button type="primary" :icon="Plus" @click="handleAdd">
@@ -17,9 +18,9 @@
         :tree-props="{ children: 'children' }"
         stripe
       >
-        <el-table-column prop="deptName" :label="t('department.name')" width="200" />
-        <el-table-column prop="managerName" :label="t('department.manager')" width="150" />
-        <el-table-column prop="status" :label="t('common.status')" width="100">
+        <el-table-column prop="deptName" :label="t('department.name')" min-width="200" />
+        <el-table-column prop="managerName" :label="t('department.manager')" min-width="150" />
+        <el-table-column prop="status" :label="t('common.status')" width="120">
           <template #default="{ row }">
             <el-tag :type="row.status === 'active' ? 'success' : 'info'">
               {{ row.status === 'active' ? t('employee.active') : t('employee.inactive') }}
@@ -27,7 +28,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="createdAt" :label="t('common.createTime')" width="180" />
-        <el-table-column :label="t('common.operation')" width="180" fixed="right">
+        <el-table-column :label="t('common.operation')" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" :icon="Edit" @click="handleEdit(row)">
               {{ t('common.edit') }}
@@ -204,6 +205,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.department-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.department-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.department-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.department-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.department-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .toolbar {

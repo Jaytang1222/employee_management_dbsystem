@@ -1,5 +1,6 @@
 <template>
   <div class="assignment-container">
+    <h2 class="page-title">{{ t('menu.assignment') }}</h2>
     <el-card>
       <div class="toolbar">
         <el-button type="primary" :icon="Plus" @click="handleAdd">
@@ -307,6 +308,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.assignment-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.assignment-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.assignment-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.assignment-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.assignment-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .toolbar {

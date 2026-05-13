@@ -1,9 +1,15 @@
 <template>
   <div class="performance-container">
+    <h2 class="page-title">{{ t('menu.performance') }}</h2>
     <el-card>
       <el-form :model="queryForm" :inline="true" class="search-form">
         <el-form-item :label="t('performance.grade')">
-          <el-select v-model="queryForm.grade" :placeholder="t('common.pleaseSelect')" clearable>
+          <el-select 
+            v-model="queryForm.grade" 
+            :placeholder="t('common.pleaseSelect')" 
+            clearable
+            style="width: 200px"
+          >
             <el-option label="A" value="A" />
             <el-option label="B" value="B" />
             <el-option label="C" value="C" />
@@ -99,7 +105,11 @@
         </el-form-item>
         
         <el-form-item :label="t('performance.grade')" prop="grade">
-          <el-select v-model="form.grade" style="width: 100%">
+          <el-select 
+            v-model="form.grade" 
+            :placeholder="t('common.pleaseSelect')"
+            style="width: 100%"
+          >
             <el-option :label="t('performance.gradeA')" value="A" />
             <el-option :label="t('performance.gradeB')" value="B" />
             <el-option :label="t('performance.gradeC')" value="C" />
@@ -349,6 +359,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.performance-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.performance-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.performance-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.performance-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.performance-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .search-form {

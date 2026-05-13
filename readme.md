@@ -1,168 +1,125 @@
-# 企业员工管理系统（Employee Management System）
+# 企业员工管理系统
 
-## 📋 项目简介
+## 项目简介
 
 企业员工管理系统是一个基于OpenGauss数据库的全功能员工管理平台，实现了员工、部门、岗位、考勤、薪资、绩效的全生命周期管理。
 
-**项目简称**：EMS  
-**开发周期**：3-4周  
-**当前状态**：✅ 数据库设计与实现阶段已完成
+项目简称：EMS
 
----
+## 技术栈
 
-## 🛠️ 技术栈
-
-### **后端技术**
+### 后端
 - Java 8
 - Spring Boot 2.7.18
-- MyBatis 2.3.1
-- OpenGauss JDBC 3.1.0
-- JWT (jjwt) 0.9.1
-- Apache POI 5.2.3
-- Maven 3.6+
+- MyBatis 2.3.2
+- OpenGauss JDBC 6.0.3
+- JWT (jjwt) 0.11.5
+- Apache POI 5.2.5
 
-### **前端技术**
-- Vue.js 3.x
+### 前端
+- Vue 3
 - Element Plus
-- Vue Router 4.x
+- Vue Router 4
 - Axios
 - Vite
 
-### **数据库**
-- OpenGauss
+## 功能特性
 
----
+### 核心功能
+- 用户登录认证（JWT Token）
+- 员工信息管理（CRUD）
+- 部门管理（CRUD + 树形展示）
+- 岗位管理（CRUD）
+- 员工分配管理（部门+岗位）
+- 考勤管理（CRUD + 月报）
+- 薪资管理（CRUD + 统计）
+- 绩效管理（CRUD + 排名）
 
-## ✨ 功能特性
+### 特色功能
+- 部门树形展示：递归展示部门层级结构
+- 统计报表：按部门统计员工数量、员工考勤月报、绩效排名
+- 数据导出：Excel格式导出员工、考勤、薪资数据
 
-### **核心功能**
-- ✅ 用户登录认证（JWT Token）
-- ✅ 员工信息管理（CRUD）
-- ✅ 部门管理（CRUD + 树形展示）
-- ✅ 岗位管理（CRUD）
-- ✅ 员工分配管理（部门+岗位）
-- ✅ 考勤管理（CRUD + 月报）
-- ✅ 薪资管理（CRUD + 统计）
-- ✅ 绩效管理（CRUD + 排名）
-
-### **特色功能**
-- 🌳 **部门树形展示**：递归展示部门层级结构
-- 📊 **统计报表**：
-  - 按部门统计员工数量
-  - 员工考勤月报
-  - 绩效排名
-- 📥 **数据导出**：Excel格式导出员工、考勤、薪资数据
-
----
-
-## 📂 项目结构
+## 项目结构
 
 ```
 employee-management-system/
-├── README.md                          # 项目说明
-├── list.md                            # 开发规范文档
 ├── docs/                              # 文档目录
-│   ├── database-design.md            # 数据库设计文档 ✅
-│   └── system-module-diagram.md      # 系统功能模块图 ✅
-├── sql/                               # SQL脚本 ✅
+│   ├── database-design.md            # 数据库设计文档
+│   ├── system-module-diagram.md      # 系统功能模块图
+│   ├── deployment-guide.md           # 部署指南
+│   ├── development-guide.md          # 开发指南
+│   └── api-reference.md              # API接口文档
+├── sql/                               # SQL脚本
 │   ├── 01-create-database.sql        # 创建数据库
-│   ├── 02-create-tables.sql          # 创建表结构（8张表）
-│   ├── 03-insert-test-data.sql       # 插入测试数据（30个员工）
+│   ├── 02-create-tables.sql          # 创建表结构
+│   ├── 03-insert-test-data.sql       # 插入测试数据
 │   └── 04-create-indexes.sql         # 创建索引
-├── backend/                           # 后端项目（待开发）
-└── frontend/                          # 前端项目（待开发）
+├── src/                               # 后端源码
+└── frontend/                          # 前端源码
 ```
 
----
+## 数据库设计
 
-## 🗄️ 数据库设计
+### 数据库信息
+- 数据库名：employee_management_system
+- 表数量：8张核心业务表
+- 测试数据：30个员工 + 相关数据
 
-### **数据库信息**
-- **数据库名**：employee_management_system（简写：ems_db）
-- **表数量**：8张核心业务表
-- **测试数据**：30个员工 + 相关数据
+### 表清单
+| 表名 | 说明 |
+|------|------|
+| user_info | 用户表（登录认证） |
+| employee_info | 员工表（员工基本信息） |
+| department_info | 部门表（组织架构） |
+| position_info | 岗位表（职位信息） |
+| assignment_info | 员工分配表（员工-部门-岗位关联） |
+| attendance_info | 考勤表（考勤记录） |
+| payroll_info | 薪资记录表（工资发放） |
+| performance_info | 绩效考核表（绩效评估） |
 
-### **表清单**
-| 序号 | 表名 | 中文名 | 说明 |
-|------|------|--------|------|
-| 1 | user_info | 用户表 | 登录认证 |
-| 2 | employee_info | 员工表 | 员工基本信息 |
-| 3 | department_info | 部门表 | 组织架构（树形结构） |
-| 4 | position_info | 岗位表 | 职位信息 |
-| 5 | assignment_info | 员工分配表 | 员工-部门-岗位关联 |
-| 6 | attendance_info | 考勤表 | 考勤记录 |
-| 7 | payroll_info | 薪资记录表 | 工资发放 |
-| 8 | performance_info | 绩效考核表 | 绩效评估 |
+详细设计请参考 [数据库设计文档](docs/database-design.md)
 
-### **ER关系**
-- Employee ↔ Department：多对多（通过Assignment）
-- Employee ↔ Position：多对多（通过Assignment）
-- Employee → Attendance：一对多
-- Employee → Payroll：一对多
-- Employee → Performance：一对多
-- Department → Department：自关联（树形结构）
+## 快速部署
 
----
-
-## 🚀 快速开始
-
-### **环境要求**
-- OpenGauss 数据库（已配置）
+### 环境要求
+- OpenGauss 数据库
 - Java 8+
 - Maven 3.6+
-- Node.js 14+（前端开发）
+- Node.js 14+
 
-### **数据库安装步骤**
+### 数据库部署
 
-#### **1. 连接到OpenGauss**
+1. 连接到OpenGauss
 ```bash
 gsql -d postgres -h localhost -U gaussdb -W -p 5432
 ```
 
-#### **2. 创建数据库**
+2. 按顺序执行SQL脚本
 ```bash
-\i /path/to/sql/01-create-database.sql
+\i sql/01-create-database.sql
+\i sql/02-create-tables.sql
+\i sql/03-insert-test-data.sql
+\i sql/04-create-indexes.sql
 ```
 
-#### **3. 创建表结构**
-```bash
-\i /path/to/sql/02-create-tables.sql
-```
-
-#### **4. 插入测试数据**
-```bash
-\i /path/to/sql/03-insert-test-data.sql
-```
-
-#### **5. 创建索引**
-```bash
-\i /path/to/sql/04-create-indexes.sql
-```
-
-#### **6. 验证安装**
+3. 验证安装
 ```sql
 -- 查看所有表
 SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename;
 
 -- 统计数据量
-SELECT 'employee_info' as table_name, COUNT(*) as record_count FROM employee_info
-UNION ALL
-SELECT 'department_info', COUNT(*) FROM department_info
-UNION ALL
-SELECT 'position_info', COUNT(*) FROM position_info
-UNION ALL
-SELECT 'user_info', COUNT(*) FROM user_info
-UNION ALL
-SELECT 'assignment_info', COUNT(*) FROM assignment_info
-UNION ALL
-SELECT 'attendance_info', COUNT(*) FROM attendance_info
-UNION ALL
-SELECT 'payroll_info', COUNT(*) FROM payroll_info
-UNION ALL
-SELECT 'performance_info', COUNT(*) FROM performance_info;
+SELECT 'employee_info' as table_name, COUNT(*) FROM employee_info
+UNION ALL SELECT 'department_info', COUNT(*) FROM department_info
+UNION ALL SELECT 'position_info', COUNT(*) FROM position_info
+UNION ALL SELECT 'user_info', COUNT(*) FROM user_info
+UNION ALL SELECT 'assignment_info', COUNT(*) FROM assignment_info
+UNION ALL SELECT 'attendance_info', COUNT(*) FROM attendance_info
+UNION ALL SELECT 'payroll_info', COUNT(*) FROM payroll_info
+UNION ALL SELECT 'performance_info', COUNT(*) FROM performance_info;
 ```
 
-**预期结果**：
+预期结果：
 - employee_info: 30条
 - department_info: 10条
 - position_info: 15条
@@ -172,238 +129,115 @@ SELECT 'performance_info', COUNT(*) FROM performance_info;
 - payroll_info: 90条
 - performance_info: 60条
 
----
+### 后端部署
 
-## 🔑 测试账号
+1. 配置数据库连接
 
-系统已预置以下测试账号（密码统一为：`password123`）：
+编辑 `src/main/resources/application.yml`：
+```yaml
+spring:
+  datasource:
+    url: jdbc:opengauss://localhost:5432/employee_management_system
+    username: gaussdb
+    password: your_password
+    driver-class-name: org.opengauss.Driver
+```
 
-| 用户名 | 密码 | 关联员工 | 说明 |
-|--------|------|----------|------|
-| admin | password123 | 张伟 | 管理员账号 |
-| zhangwei | password123 | 张伟 | 总经理 |
-| lina | password123 | 李娜 | 技术总监 |
-| wangfang | password123 | 王芳 | 市场总监 |
-| liuqiang | password123 | 刘强 | 人力资源经理 |
-| zhaomin | password123 | 赵敏 | 财务经理 |
+2. 编译打包
+```bash
+mvn clean package
+```
 
----
+3. 运行应用
+```bash
+java -jar target/ems-1.0.0.jar
+```
 
-## 📊 数据库设计亮点
+后端服务运行在 http://localhost:8080
 
-### **1. 规范化设计**
-- 遵循第三范式，消除数据冗余
-- 合理使用主键、外键约束
-- 统一的命名规范（下划线命名法）
+### 前端部署
 
-### **2. 审计追踪**
-- 所有表包含 `created_at` 和 `updated_at` 字段
-- 记录数据创建和更新时间
+1. 安装依赖
+```bash
+cd frontend
+npm install
+```
 
-### **3. 软删除**
-- 通过 `status` 字段实现逻辑删除
-- 保留历史数据，避免误删
+2. 配置后端地址
 
-### **4. 性能优化**
-- 为外键字段创建索引
-- 为频繁查询字段创建索引
-- 为组合查询创建复合索引
-- 共创建30+个索引
+编辑 `frontend/.env.development`：
+```
+VITE_API_BASE_URL=http://localhost:8080
+```
 
-### **5. 数据完整性**
-- CHECK约束：性别、状态、等级等枚举值
-- UNIQUE约束：身份证号、用户名等唯一字段
-- NOT NULL约束：必填字段
-- 外键约束：保证关联数据一致性
+3. 开发模式运行
+```bash
+npm run dev
+```
 
-### **6. 灵活扩展**
-- 部门支持树形结构（3-5级）
-- 员工支持多部门（主部门+兼职）
-- 保留员工调动历史记录
+前端服务运行在 http://localhost:5173
 
----
+4. 生产构建
+```bash
+npm run build
+```
 
-## 📝 开发进度
+构建产物在 `frontend/dist` 目录
 
-### **✅ 阶段一：数据库设计与实现（已完成）**
-- [x] ER图绘制
-- [x] 数据库设计文档编写
-- [x] 系统功能模块图设计
-- [x] SQL建表脚本编写
-- [x] 测试数据脚本编写
-- [x] 索引创建脚本编写
-- [x] 数据库部署验证
+### 生产环境部署
 
-### **⏳ 阶段二：后端开发（进行中）**
-- [ ] 项目初始化
-- [ ] 基础架构搭建
-- [ ] 登录功能实现
-- [ ] 基础CRUD开发（7个模块）
-- [ ] 统计报表功能
-- [ ] 数据导出功能
+使用Nginx部署前端：
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+    
+    root /path/to/frontend/dist;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    location /api {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
 
-### **⏳ 阶段三：前端开发（待开始）**
-- [ ] 项目初始化
-- [ ] 基础架构搭建
-- [ ] 登录页面
-- [ ] 各模块页面开发
-- [ ] 统计报表页面
-- [ ] 导出功能集成
+详细部署说明请参考 [部署指南](docs/deployment-guide.md)
 
-### **⏳ 阶段四：联调测试（待开始）**
-- [ ] 功能测试
-- [ ] 边界测试
-- [ ] 用户体验优化
-- [ ] Bug修复
+## 测试账号
 
-### **⏳ 阶段五：文档整理（待开始）**
-- [ ] API接口文档
-- [ ] 用户操作手册
-- [ ] 部署文档
+系统预置测试账号（密码统一为用户名相同·）：
 
----
+| 用户名 | 关联员工 | 角色 |
+|--------|----------|------|
+| admin | 张伟 | 管理员 |
+| zhangwei | 张伟 | 总经理 |
+| lina | 李娜 | 技术总监 |
+| wangfang | 王芳 | 市场总监 |
+| liuqiang | 刘强 | 人力资源经理 |
+| zhaomin | 赵敏 | 财务经理 |
 
-## 📚 文档说明
+## 文档
 
-### **已完成文档**
-1. **list.md** - 开发规范文档
-   - 技术栈规范
-   - 命名规范
-   - 数据库设计规范
-   - API接口规范
-   - 项目结构规范
-   - 测试数据规范
-   - Git提交规范
+- [数据库设计文档](docs/database-design.md) - 数据库表结构、索引、约束设计
+- [系统功能模块图](docs/system-module-diagram.md) - 系统功能模块和业务流程
+- [部署指南](docs/deployment-guide.md) - 详细的部署步骤和配置说明
+- [开发指南](docs/development-guide.md) - 开发规范、项目结构、技术实现
+- [API接口文档](docs/api-reference.md) - RESTful API接口说明
 
-2. **docs/database-design.md** - 数据库设计文档
-   - ER图说明
-   - 8张表的详细设计
-   - 主外键关系图
-   - 索引设计说明
-   - 数据验证规则
-   - 数据字典
+## 常见问题
 
-3. **docs/system-module-diagram.md** - 系统功能模块图
-   - 功能模块结构
-   - 模块详细说明
-   - 模块间关系
-   - 功能优先级
-   - 用户界面设计
+### 数据库连接失败
+检查OpenGauss服务是否启动，确认连接参数（host、port、username、password）是否正确。
 
----
+### 后端启动失败
+检查Java版本是否为8+，数据库是否已创建并初始化，application.yml配置是否正确。
 
-## 🔒 安全设计
+### 前端无法访问后端
+检查后端服务是否正常运行，CORS配置是否正确，.env文件中的API地址是否正确。
 
-### **1. 密码安全**
-- 使用BCrypt算法加密存储
-- 密码字段长度：VARCHAR(255)
-- 不在日志中输出密码
-
-### **2. SQL注入防护**
-- 使用MyBatis参数绑定（#{}）
-- 禁止使用字符串拼接SQL
-
-### **3. 数据访问控制**
-- JWT Token身份验证
-- 软删除保留数据
-- 重要操作记录审计日志
-
----
-
-## 📞 技术支持
-
-### **问题反馈**
-如遇到问题，请按以下步骤处理：
-1. 查阅项目文档
-2. 检查数据库连接配置
-3. 查看错误日志
-4. 联系开发团队
-
-### **常见问题**
-
-**Q1: 数据库连接失败？**
-A: 检查OpenGauss服务是否启动，确认连接参数（host、port、username、password）是否正确。
-
-**Q2: 表创建失败？**
-A: 确保按顺序执行SQL脚本，先创建数据库，再创建表，最后插入数据。
-
-**Q3: 测试数据插入失败？**
-A: 检查外键约束，确保关联表的数据已存在。
-
-**Q4: 索引创建失败？**
-A: 确保表和字段已存在，检查索引名称是否重复。
-
----
-
-## 📖 参考资料
-
-### **官方文档**
-- [OpenGauss官方文档](https://docs.opengauss.org/)
-- [Spring Boot文档](https://docs.spring.io/spring-boot/)
-- [MyBatis文档](https://mybatis.org/mybatis-3/zh/index.html)
-- [Vue 3文档](https://cn.vuejs.org/)
-- [Element Plus文档](https://element-plus.org/zh-CN/)
-
-### **技术社区**
-- [Stack Overflow](https://stackoverflow.com/)
-- [GitHub](https://github.com/)
-- [CSDN](https://www.csdn.net/)
-- [掘金](https://juejin.cn/)
-
----
-
-## 📄 许可证
-
-本项目仅用于学习和研究目的。
-
----
-
-## 👥 开发团队
-
-**项目负责人**：开发团队  
-**开发周期**：2024-01-19 至今  
-**当前版本**：v1.0（数据库设计阶段）
-
----
-
-## 🎯 下一步计划
-
-1. **后端开发**（预计7-10天）
-   - 搭建Spring Boot项目
-   - 实现登录认证
-   - 完成7个模块的CRUD
-   - 实现统计报表和数据导出
-
-2. **前端开发**（预计5-7天）
-   - 搭建Vue3项目
-   - 实现登录页面
-   - 完成各模块页面
-   - 实现统计报表和导出功能
-
-3. **联调测试**（预计2-3天）
-   - 功能测试
-   - 性能测试
-   - 用户体验优化
-
----
-
-**项目状态**：🚧 开发中  
-**最后更新**：2024-01-19  
-**文档版本**：v1.0
-
----
-
-## ⭐ 项目亮点
-
-1. ✅ **完整的数据库设计**：8张表，30+索引，完善的约束
-2. ✅ **规范的开发文档**：详细的设计文档和开发规范
-3. ✅ **丰富的测试数据**：30个员工，300+条考勤记录
-4. ✅ **树形结构支持**：部门层级管理
-5. ✅ **软删除机制**：保留历史数据
-6. ✅ **审计追踪**：记录创建和更新时间
-7. ✅ **性能优化**：合理的索引设计
-8. ✅ **数据完整性**：完善的约束和验证
-
----
-
-**感谢使用企业员工管理系统！** 🎉

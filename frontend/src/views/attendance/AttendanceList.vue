@@ -1,5 +1,6 @@
 <template>
   <div class="attendance-container">
+    <h2 class="page-title">{{ t('menu.attendance') }}</h2>
     <el-card>
       <el-form :model="queryForm" :inline="true" class="search-form">
         <el-form-item :label="t('attendance.date')">
@@ -13,7 +14,12 @@
         </el-form-item>
         
         <el-form-item :label="t('attendance.status')">
-          <el-select v-model="queryForm.status" :placeholder="t('common.pleaseSelect')" clearable>
+          <el-select 
+            v-model="queryForm.status" 
+            :placeholder="t('common.pleaseSelect')" 
+            clearable
+            style="width: 200px"
+          >
             <el-option :label="t('attendance.normal')" value="normal" />
             <el-option :label="t('attendance.late')" value="late" />
             <el-option :label="t('attendance.earlyLeave')" value="early_leave" />
@@ -45,18 +51,18 @@
         <el-table-column prop="attendanceId" label="ID" width="80" />
         <el-table-column prop="employeeName" :label="t('attendance.employee')" width="120" />
         <el-table-column prop="attendanceDate" :label="t('attendance.date')" width="120" />
-        <el-table-column prop="checkInTime" :label="t('attendance.checkInTime')" width="100" />
-        <el-table-column prop="checkOutTime" :label="t('attendance.checkOutTime')" width="100" />
-        <el-table-column prop="attendanceStatus" :label="t('attendance.status')" width="100">
+        <el-table-column prop="checkInTime" :label="t('attendance.checkInTime')" width="110" />
+        <el-table-column prop="checkOutTime" :label="t('attendance.checkOutTime')" width="110" />
+        <el-table-column prop="attendanceStatus" :label="t('attendance.status')" width="120">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.attendanceStatus)">
               {{ getStatusText(row.attendanceStatus) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lateMin" :label="t('attendance.lateMinutes')" width="100" />
-        <el-table-column prop="overtimeHours" :label="t('attendance.overtimeHours')" width="100" />
-        <el-table-column :label="t('common.operation')" width="180" fixed="right">
+        <el-table-column prop="lateMin" :label="t('attendance.lateMinutes')" width="110" />
+        <el-table-column prop="overtimeHours" :label="t('attendance.overtimeHours')" min-width="120" />
+        <el-table-column :label="t('common.operation')" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" :icon="Edit" @click="handleEdit(row)">
               {{ t('common.edit') }}
@@ -124,7 +130,11 @@
         </el-form-item>
         
         <el-form-item :label="t('attendance.status')" prop="attendanceStatus">
-          <el-select v-model="form.attendanceStatus" style="width: 100%">
+          <el-select 
+            v-model="form.attendanceStatus" 
+            :placeholder="t('common.pleaseSelect')"
+            style="width: 100%"
+          >
             <el-option :label="t('attendance.normal')" value="normal" />
             <el-option :label="t('attendance.late')" value="late" />
             <el-option :label="t('attendance.earlyLeave')" value="early_leave" />
@@ -345,6 +355,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.attendance-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.attendance-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.attendance-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.attendance-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.attendance-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .search-form {

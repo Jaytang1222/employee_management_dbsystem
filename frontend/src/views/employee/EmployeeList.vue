@@ -1,5 +1,6 @@
 <template>
   <div class="employee-container">
+    <h2 class="page-title">{{ t('menu.employee') }}</h2>
     <el-card>
       <!-- 搜索表单 -->
       <el-form :model="queryForm" :inline="true" class="search-form">
@@ -12,7 +13,12 @@
         </el-form-item>
         
         <el-form-item :label="t('employee.status')">
-          <el-select v-model="queryForm.status" :placeholder="t('common.pleaseSelect')" clearable>
+          <el-select 
+            v-model="queryForm.status" 
+            :placeholder="t('common.pleaseSelect')" 
+            clearable
+            style="width: 200px"
+          >
             <el-option :label="t('employee.active')" value="active" />
             <el-option :label="t('employee.inactive')" value="inactive" />
           </el-select>
@@ -339,6 +345,43 @@ onMounted(() => {
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin: 0 0 24px 0;
+  color: #000000;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #76b900;
+  padding-bottom: 12px;
+}
+
+.employee-container :deep(.el-card) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.employee-container :deep(.el-card__body) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.employee-container :deep(.el-table) {
+  width: 100%;
+  table-layout: auto;
+}
+
+.employee-container :deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+.employee-container :deep(.el-table__header-wrapper) {
+  width: 100%;
+  overflow: visible;
 }
 
 .search-form {
